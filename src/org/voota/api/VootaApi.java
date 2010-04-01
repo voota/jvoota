@@ -42,6 +42,7 @@ public class VootaApi {
     public static final String strTag = "Voota";
     
     private static final int TIMEOUT = 16000;
+    private static final String CHARSET = "UTF-8";
 
     /*OAuth parameters*/
     private static String REQUEST_TOKEN_URL = "http://api.voota.org/oauth/request_token";
@@ -105,7 +106,6 @@ public class VootaApi {
 
 	public String getAuthorizeUrl() throws VootaApiException 
 	{
-	    //Intent iAuthorize = null;
         String strAuthUrl = null;
         try 
         {
@@ -138,7 +138,6 @@ public class VootaApi {
 	    try 
 	    {
             m_provider.retrieveAccessToken(m_consumer, strRequestToken);
-            //Log.i(strTag, "Ok!!!");
             m_strAccessToken = m_consumer.getToken();
             m_strTokenSecret = m_consumer.getTokenSecret();
         } 
@@ -184,8 +183,10 @@ public class VootaApi {
 	    try
 	    {
     	    StringBuilder strUrlParams = new StringBuilder(m_strHostName);
-    	    strUrlParams.append("?" + m_strPNameMethod + "=" + URLEncoder.encode(m_strPValueMethodSearch));
-    	    strUrlParams.append("&" + m_strPNameSearchString + "=" + URLEncoder.encode(strSearch));
+    	    strUrlParams.append("?" + m_strPNameMethod + "=" + 
+    	            URLEncoder.encode(m_strPValueMethodSearch, CHARSET));
+    	    strUrlParams.append("&" + m_strPNameSearchString + "=" + 
+    	            URLEncoder.encode(strSearch, CHARSET));
     	    
     	    HttpClient client = new DefaultHttpClient();
     	    HttpGet get = new HttpGet(strUrlParams.toString());
@@ -201,10 +202,18 @@ public class VootaApi {
         	        listEntities.add(new EntityInfo(arrayEntities.getJSONObject(i)));
         	    }
     	    }
+    	    else
+    	    {
+    	        throw new VootaApiException(VootaApiException.kErrorNoRespond);
+    	    }
 	    }
-	    catch (Throwable e)
+	    catch (IOException e)
 	    {
-	        //Log.e(strTag, e.getMessage());
+	        throw new VootaApiException(VootaApiException.kErrorNoRespond);
+	    }
+	    catch (JSONException e)
+	    {
+            throw new VootaApiException(VootaApiException.kErrorNoRespond);
 	    }
 	    
 	    return listEntities;
@@ -219,7 +228,8 @@ public class VootaApi {
 	    try
 	    {
     	    StringBuilder strUrlParams = new StringBuilder(m_strHostName);
-    	    strUrlParams.append("?" + m_strPNameMethod + "=" + URLEncoder.encode(m_strPValueMethodTop));
+    	    strUrlParams.append("?" + m_strPNameMethod + "=" + 
+    	            URLEncoder.encode(m_strPValueMethodTop, CHARSET));
     	        	    
     	    DefaultHttpClient client = new DefaultHttpClient();
     	    HttpGet get = new HttpGet(strUrlParams.toString());
@@ -243,11 +253,11 @@ public class VootaApi {
 	    }
 	    catch (IOException e)
 	    {
-	        //Log.e(strTag, e.getMessage());
+            throw new VootaApiException(VootaApiException.kErrorNoRespond);
 	    }
 	    catch (JSONException e)
 	    {
-	        //Log.e(strTag, e.getMessage());
+            throw new VootaApiException(VootaApiException.kErrorNoRespond);
 	    }
 	    
 	    return listEntities;
@@ -282,13 +292,13 @@ public class VootaApi {
 	    } 
 	    catch (IOException e) 
 	    {
-	        throw new VootaApiException(VootaApiException.kErrorNoRespond);
+	        //throw new VootaApiException(VootaApiException.kErrorNoRespond);
 	    }
 
 	    return bytesImage;
 	}
 
-	public byte[] getUrlImageBitmap(URL urlImage)// throws VootaApiException
+	/*public byte[] getUrlImageBitmap(URL urlImage)// throws VootaApiException
 	{
 	    byte[] bytesImage = null;
 	    //Bitmap btmImage = null;
@@ -309,7 +319,7 @@ public class VootaApi {
 	    }
 
 	    return bytesImage;
-	}
+	}*/
 	
     private ArrayList<EntityInfo> getListOfEntitiesByPage(String strPoliciesOrParty, 
             boolean bIsSortedPositive, int nPageNumber) 
@@ -322,12 +332,14 @@ public class VootaApi {
         try
         {
             StringBuilder strUrlParams = new StringBuilder(m_strHostName);
-            strUrlParams.append("?" + 
-                    m_strPNameMethod + "=" + URLEncoder.encode(m_strPValueMethodEntities) + "&" +
-                    m_strPNameType + "=" + URLEncoder.encode(strPoliciesOrParty));
+            strUrlParams.append("?" + m_strPNameMethod + "=" + 
+                    URLEncoder.encode(m_strPValueMethodEntities, CHARSET) 
+                    + "&" + m_strPNameType + "=" + 
+                    URLEncoder.encode(strPoliciesOrParty, CHARSET));
             if (!bIsSortedPositive)
             {
-                strUrlParams.append("&" + m_strPNameSort + "=" + URLEncoder.encode(m_strPValueNegative));
+                strUrlParams.append("&" + m_strPNameSort + "=" + 
+                        URLEncoder.encode(m_strPValueNegative, CHARSET));
             }
             if (nPageNumber != 0)
             {
@@ -356,13 +368,12 @@ public class VootaApi {
         }
         catch (IOException e)
         {
-            //Log.e(strTag, e.getMessage());
+            throw new VootaApiException(VootaApiException.kErrorNoRespond);
         }
         catch (JSONException e)
         {
-            //Log.e(strTag, e.getMessage());
+            throw new VootaApiException(VootaApiException.kErrorNoRespond);
         }
-        
         
         return listEntities;
     }
@@ -375,16 +386,16 @@ public class VootaApi {
         try
         {
             StringBuilder strUrlParams = new StringBuilder(m_strHostName);
-            strUrlParams.append("?" + 
-                    m_strPNameMethod + "=" + URLEncoder.encode(m_strPValueMethodReviews) + "&" +
+            strUrlParams.append("?" + m_strPNameMethod + "=" + 
+                    URLEncoder.encode(m_strPValueMethodReviews, CHARSET) + "&" +
                     m_strPNameType + "=");
             if(entity.getType() == EntityType.kPolices)
             {
-                strUrlParams.append(URLEncoder.encode(m_strPValuePolicies));
+                strUrlParams.append(URLEncoder.encode(m_strPValuePolicies, CHARSET));
             }
             else
             {
-                strUrlParams.append(URLEncoder.encode(m_strPValueParty));
+                strUrlParams.append(URLEncoder.encode(m_strPValueParty, CHARSET));
             }
             strUrlParams.append("&" + m_strPNameEntity + "=" + String.valueOf(entity.getID()));
             
@@ -432,8 +443,9 @@ public class VootaApi {
     	    
     	    m_consumer.setTokenWithSecret(m_strAccessToken, m_strTokenSecret);
             
-    	    String url = OAuth.addQueryParameters(m_strHostName, URLEncoder.encode(m_strPNameMethod),
-    	            URLEncoder.encode(m_strPValueMethodPostReview));
+    	    String url = OAuth.addQueryParameters(m_strHostName, 
+    	            URLEncoder.encode(m_strPNameMethod, CHARSET),
+    	            URLEncoder.encode(m_strPValueMethodPostReview, CHARSET));
     		
     		HttpPost post = new HttpPost(url);
     		
@@ -500,25 +512,29 @@ public class VootaApi {
     
     public EntityInfo getEntityInfo(EntityInfo oldEntity) throws VootaApiException
     {
+        checkConnection();
         EntityInfo newEntity = null;
-        
-        StringBuilder builder = new StringBuilder(m_strHostName);
-        builder.append("?" + m_strPNameMethod + "=" + URLEncoder.encode(m_strPValueMethodEntity));
-        if (oldEntity.getType() == EntityInfo.EntityType.kParty)
-        {
-            builder.append("&" + m_strPNameType + "=" + URLEncoder.encode(m_strPValueParty));
-        }
-        else
-        {
-            builder.append("&" + m_strPNameType + "=" + URLEncoder.encode(m_strPValuePolicies));
-        }
-        builder.append("&" + m_strPNameId + "=");
-        builder.append(oldEntity.getID());
-        
-        HttpGet get = new HttpGet(builder.toString());
-        HttpClient client = new DefaultHttpClient();
+  
         try
         {
+            StringBuilder builder = new StringBuilder(m_strHostName);
+            builder.append("?" + m_strPNameMethod + "=" + 
+                    URLEncoder.encode(m_strPValueMethodEntity, CHARSET));
+            if (oldEntity.getType() == EntityInfo.EntityType.kParty)
+            {
+                builder.append("&" + m_strPNameType + "=" + 
+                        URLEncoder.encode(m_strPValueParty, CHARSET));
+            }
+            else
+            {
+                builder.append("&" + m_strPNameType + "=" + 
+                        URLEncoder.encode(m_strPValuePolicies, CHARSET));
+            }
+            builder.append("&" + m_strPNameId + "=");
+            builder.append(oldEntity.getID());
+            
+            HttpGet get = new HttpGet(builder.toString());
+            HttpClient client = new DefaultHttpClient();
             HttpResponse response = client.execute(get);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
             {
@@ -601,7 +617,7 @@ public class VootaApi {
 	    }
 	    catch (Throwable e)
 	    {
-	    
+	        e.printStackTrace();
 	    }
 	    finally
 	    {
@@ -611,6 +627,7 @@ public class VootaApi {
             } 
             catch (IOException e) 
             {
+                e.printStackTrace();
             }
 	    }
 	    
