@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+======================================================================
+
+======================================================================
+-->
+<project name="jvoota" default="default" basedir=".">
+    <description>
+            Java library for Voots REST API
+    </description>
+
+    <!-- =================================
+          target: default
+         ================================= -->
+    <target name="default" depends="depends" description="description">
+
+        <jar destfile="bin/jvoota.jar">
+            <fileset dir="bin" includes="**/*.class" />
+            <fileset dir="src" includes="**/*.java" />
+        	<fileset dir="lib" includes="*.jar"/>
+        </jar>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - -
+          target: depends
+         - - - - - - - - - - - - - - - - - -->
+    <target name="depends">
+    </target>
+
+</project> 

@@ -15,11 +15,7 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
-import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
-import oauth.signpost.exception.OAuthNotAuthorizedException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -74,10 +70,10 @@ public class VootaApi {
 	private static final String m_strPValuePolicies = "politician";
 	private static final String m_strPValueParty = "party";
     private static final String m_strPNameSort = "sort";
-    private static final String m_strPValuePositive = "positive";
+    //private static final String m_strPValuePositive = "positive";
     private static final String m_strPValueNegative = "negative";
     private static final String m_strPNamePage = "page";
-    
+
     private static final String m_strPValueMethodReviews = "reviews";
     private static final String m_strPNameEntity = "entity";
 
@@ -86,8 +82,8 @@ public class VootaApi {
    
     private static final String m_strPValueMethodPostReview = "review";
     private static final String m_strPNameText = "text";
-    private static final String m_strPValuePosReview = "1";
-    private static final String m_strPValueNegReview = "-1";
+   // private static final String m_strPValuePosReview = "1";
+    //private static final String m_strPValueNegReview = "-1";
     public static final int m_nPageSize = 20;
     
 	public VootaApi(String strConsumerKey, String strConsumerSecret,
@@ -292,35 +288,11 @@ public class VootaApi {
 	    } 
 	    catch (IOException e) 
 	    {
-	        //throw new VootaApiException(VootaApiException.kErrorNoRespond);
 	    }
 
 	    return bytesImage;
 	}
 
-	/*public byte[] getUrlImageBitmap(URL urlImage)// throws VootaApiException
-	{
-	    byte[] bytesImage = null;
-	    //Bitmap btmImage = null;
-	    try 
-	    {
-	        HttpURLConnection conn= (HttpURLConnection)urlImage.openConnection();
-	        conn.setDoInput(true);
-	        conn.connect();
-	        InputStream is = conn.getInputStream();
-
-	        int bytesAvailable = conn.getContentLength();
-	        bytesImage = new byte[bytesAvailable];
-	        is.read(bytesImage);
-	    } 
-	    catch (IOException e) 
-	    {
-	        //throw new VootaApiException(VootaApiException.kErrorNoRespond);
-	    }
-
-	    return bytesImage;
-	}*/
-	
     private ArrayList<EntityInfo> getListOfEntitiesByPage(String strPoliciesOrParty, 
             boolean bIsSortedPositive, int nPageNumber) 
         throws VootaApiException
@@ -621,7 +593,7 @@ public class VootaApi {
 	    }
 	    finally
 	    {
-            try 
+            try
             {
                 istream.close();
             } 
