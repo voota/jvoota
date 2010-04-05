@@ -15,7 +15,7 @@
     <target name="default" depends="depends" description="description">
 
         <jar destfile="bin/jvoota.jar">
-            <fileset dir="bin" includes="**/*.class" />
+            <fileset dir="gen" includes="**/*.class" />
         </jar>
     </target>
 
