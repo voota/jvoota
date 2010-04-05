@@ -16,8 +16,6 @@
 
         <jar destfile="bin/jvoota.jar">
             <fileset dir="bin" includes="**/*.class" />
-            <fileset dir="src" includes="**/*.java" />
-        	<fileset dir="lib" includes="*.jar"/>
         </jar>
     </target>
 

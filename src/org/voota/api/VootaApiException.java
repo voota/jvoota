@@ -15,15 +15,27 @@ public class VootaApiException extends Throwable
     		"because you aren't authorized!";
     
     private int m_nErrorCode;
+    private String m_strErrorMessage;
     
     public VootaApiException (int nErrorCode)
     {
-       m_nErrorCode = nErrorCode; 
+       m_nErrorCode = nErrorCode;
+       m_strErrorMessage = "";
+    }
+    
+    public VootaApiException (int nErrorCode, String strMessage)
+    {
+        m_nErrorCode = nErrorCode;
+        m_strErrorMessage = strMessage;
     }
     
     public String getMessage()
     {
-        String strError = "";
+        String strError = m_strErrorMessage;
+        if (strError.length() != 0)
+        {
+            return strError;
+        }
         
         switch(m_nErrorCode)
         {

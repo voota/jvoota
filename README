@@ -1,0 +1,26 @@
+jvoota: jar archive for REST Voota API.
+=======================================
+
+jvoota is a Java jar archive wraps all operation with REST Voota API. 
+
+
+Dependencies
+------------
+To build jvoota.jar or use it in application you have to include to your project following jars:
+
+httpclient-4.0.jar
+httpcore-4.0.1.jar
+httpmime-4.0.jar
+signpost-commonshttp4-1.2.1.1.jar
+signpost-core-1.2.1.1.jar
+
+Following urls helps you to download required jars:
+http://apache.infocom.ua/httpcomponents/httpclient/binary/httpcomponents-client-4.0-bin-with-dependencies.zip
+http://code.google.com/p/oauth-signpost/downloads/list
+
+In addtional, jvoota.jar use org.json library, which available in source code here:
+http://www.json.org/java/json.zip
+
+
+
+

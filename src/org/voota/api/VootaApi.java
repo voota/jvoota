@@ -15,7 +15,11 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
+import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.exception.OAuthNotAuthorizedException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -141,22 +145,27 @@ public class VootaApi {
 	    {
 	        throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
 	    }
-	    /*catch (OAuthMessageSignerException e) {
+	    /*catch (OAuthMessageSignerException e)
+	    {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
+            //e.printStackTrace();
+            throw new VootaApiException(VootaApiException.kErrorNoAuthorize, 
+                    e.getMessage() + " " + e.toString());
         } catch (OAuthNotAuthorizedException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
+            //e.printStackTrace();
+            throw new VootaApiException(VootaApiException.kErrorNoAuthorize,
+                    e.getMessage() + " " + e.toString());
         } catch (OAuthExpectationFailedException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
+            //e.printStackTrace();
+            throw new VootaApiException(VootaApiException.kErrorNoAuthorize,
+                    e.getMessage() + " " + e.toString());
         } catch (OAuthCommunicationException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
+            //e.printStackTrace();
+            throw new VootaApiException(VootaApiException.kErrorNoAuthorize,
+                    e.getMessage() + " " + e.toString());
         }*/
     }
 	
@@ -466,7 +475,7 @@ public class VootaApi {
     		{
     		    e.printStackTrace();
     		}
-    		/*HttpResponse response = client.execute(post);
+    		HttpResponse response = client.execute(post);
     		if (response.getStatusLine().getStatusCode() != 200)
     		{
     			throw new VootaApiException(VootaApiException.kErrorCantPostReview);
