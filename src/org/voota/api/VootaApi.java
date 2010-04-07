@@ -104,9 +104,11 @@ public class VootaApi {
 	}
 	
 
-	public String getAuthorizeUrl() throws VootaApiException 
+	public String getAuthorizeUrl(/*String strConsumerKey, String strConsumerSecret,
+	        String strCallbackUrl*/) throws VootaApiException 
 	{
         String strAuthUrl = null;
+        
         try 
         {
             strAuthUrl = m_provider.retrieveRequestToken(m_consumer, m_strCallbackUrl);
