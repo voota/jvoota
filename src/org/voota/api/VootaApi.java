@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -15,11 +16,7 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
-import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
-import oauth.signpost.exception.OAuthNotAuthorizedException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -38,16 +35,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.voota.api.EntityInfo.EntityType;
 
-public class VootaApi {
+public class VootaApi implements Serializable {
     public static final String strTag = "Voota";
     
+    private static final long serialVersionUID = 5855835290453961251L;
     private static final int TIMEOUT = 16000;
     private static final String CHARSET = "UTF-8";
 
     /*OAuth parameters*/
-    private static String REQUEST_TOKEN_URL = "http://api.voota.org/oauth/request_token";
-	private static String AUTHORIZATION_URL = "http://api.voota.org/oauth/authorize";
-	private static String ACCESS_TOKEN_URL = "http://api.voota.org/oauth/access_token";
+	private static final String m_strHostNameTest = "http://api.voota.org"; /*"http://dummy.voota.es";*/
+	private static final String m_strHostNameProduction = "http://voota.es";
+    
+	private static final String m_strAPIHostName = m_strHostNameTest + "/a1";
+    private static String REQUEST_TOKEN_URL = m_strHostNameTest + "/oauth/request_token";
+	private static String AUTHORIZATION_URL = m_strHostNameTest + "/oauth/authorize";
+	private static String ACCESS_TOKEN_URL = m_strHostNameTest + "/oauth/access_token";
 	
 	private String m_strConsumerKey = "";
 	private String m_strConsumerSecret = "";
@@ -59,7 +61,6 @@ public class VootaApi {
 	private String m_strTokenSecret = "";
 	
 	//private static final String m_strHostName = "http://dummy.voota.es/a1";
-	private static final String m_strHostName = "http://api.voota.org/a1";
 	/*Server's methods*/
 	private static final String m_strPNameMethod = "method";
 	
@@ -104,8 +105,7 @@ public class VootaApi {
 	}
 	
 
-	public String getAuthorizeUrl(/*String strConsumerKey, String strConsumerSecret,
-	        String strCallbackUrl*/) throws VootaApiException 
+	public String getAuthorizeUrl() throws VootaApiException 
 	{
         String strAuthUrl = null;
         
@@ -115,7 +115,7 @@ public class VootaApi {
         } 
         catch (Throwable e)
         {
-            throw new VootaApiException(VootaApiException.kErrorNoRespond);
+            throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
         }
         /*catch (OAuthMessageSignerException e) 
         {
@@ -189,7 +189,7 @@ public class VootaApi {
 	    
 	    try
 	    {
-    	    StringBuilder strUrlParams = new StringBuilder(m_strHostName);
+    	    StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
     	    strUrlParams.append("?" + m_strPNameMethod + "=" + 
     	            URLEncoder.encode(m_strPValueMethodSearch, CHARSET));
     	    strUrlParams.append("&" + m_strPNameSearchString + "=" + 
@@ -234,7 +234,7 @@ public class VootaApi {
 	    
 	    try
 	    {
-    	    StringBuilder strUrlParams = new StringBuilder(m_strHostName);
+    	    StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
     	    strUrlParams.append("?" + m_strPNameMethod + "=" + 
     	            URLEncoder.encode(m_strPValueMethodTop, CHARSET));
     	        	    
@@ -314,7 +314,7 @@ public class VootaApi {
         
         try
         {
-            StringBuilder strUrlParams = new StringBuilder(m_strHostName);
+            StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
             strUrlParams.append("?" + m_strPNameMethod + "=" + 
                     URLEncoder.encode(m_strPValueMethodEntities, CHARSET) 
                     + "&" + m_strPNameType + "=" + 
@@ -368,7 +368,7 @@ public class VootaApi {
         ArrayList<ReviewInfo> m_listReviews = new ArrayList<ReviewInfo>();
         try
         {
-            StringBuilder strUrlParams = new StringBuilder(m_strHostName);
+            StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
             strUrlParams.append("?" + m_strPNameMethod + "=" + 
                     URLEncoder.encode(m_strPValueMethodReviews, CHARSET) + "&" +
                     m_strPNameType + "=");
@@ -426,7 +426,7 @@ public class VootaApi {
     	    
     	    m_consumer.setTokenWithSecret(m_strAccessToken, m_strTokenSecret);
             
-    	    String url = OAuth.addQueryParameters(m_strHostName, 
+    	    String url = OAuth.addQueryParameters(m_strAPIHostName, 
     	            URLEncoder.encode(m_strPNameMethod, CHARSET),
     	            URLEncoder.encode(m_strPValueMethodPostReview, CHARSET));
     		
@@ -500,7 +500,7 @@ public class VootaApi {
   
         try
         {
-            StringBuilder builder = new StringBuilder(m_strHostName);
+            StringBuilder builder = new StringBuilder(m_strAPIHostName);
             builder.append("?" + m_strPNameMethod + "=" + 
                     URLEncoder.encode(m_strPValueMethodEntity, CHARSET));
             if (oldEntity.getType() == EntityInfo.EntityType.kParty)
@@ -549,7 +549,7 @@ public class VootaApi {
         HttpConnectionParams.setConnectionTimeout(params, TIMEOUT);
         HttpConnectionParams.setSoTimeout(params, TIMEOUT);
 
-        HttpGet get = new HttpGet(m_strHostName);
+        HttpGet get = new HttpGet(m_strAPIHostName);
         get.setParams(params);
         HttpClient httpClient = new DefaultHttpClient();
         
