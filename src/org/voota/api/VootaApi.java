@@ -43,7 +43,6 @@ public class VootaApi implements Serializable {
     private static final String CHARSET = "UTF-8";
 
     /*OAuth parameters*/
-	private static final String HOSTNAME_TEST = "http://api.voota.org"; /*"http://dummy.voota.es";*/
 	private static final String HOSTNAME_PROD = "http://voota.es";
     
 	private static final String API_POSTFIX = "/a1";
@@ -65,7 +64,6 @@ public class VootaApi implements Serializable {
 	private String m_strAccessToken = "";
 	private String m_strTokenSecret = "";
 	
-	//private static final String m_strHostName = "http://dummy.voota.es/a1";
 	/*Server's methods*/
 	private static final String m_strPNameMethod = "method";
 	
@@ -97,26 +95,16 @@ public class VootaApi implements Serializable {
     public static final int m_nPageSize = 20;
     
 	public VootaApi(String strConsumerKey, String strConsumerSecret,
-            String strCallbackUrl, boolean bIsProduction)
+            String strCallbackUrl)
 	{
         m_strConsumerKey = strConsumerKey;
         m_strConsumerSecret = strConsumerSecret;
         m_strCallbackUrl = strCallbackUrl;
         
-        if (bIsProduction)
-        {
-            m_strUsedHost = HOSTNAME_PROD + API_POSTFIX;
-            REQUEST_TOKEN_URL = HOSTNAME_PROD + REQUEST_TOKEN_POSTFIX;
-            ACCESS_TOKEN_URL = HOSTNAME_PROD + ACCESS_TOKEN_POSTFIX;
-            AUTHORIZATION_URL = HOSTNAME_PROD + AUTHORIZATION_POSTFIX;
-        }
-        else
-        {
-            m_strUsedHost = HOSTNAME_TEST + API_POSTFIX;
-            REQUEST_TOKEN_URL = HOSTNAME_TEST + REQUEST_TOKEN_POSTFIX;
-            ACCESS_TOKEN_URL = HOSTNAME_TEST + ACCESS_TOKEN_POSTFIX;
-            AUTHORIZATION_URL = HOSTNAME_TEST + AUTHORIZATION_POSTFIX;
-        }
+        m_strUsedHost = HOSTNAME_PROD + API_POSTFIX;
+        REQUEST_TOKEN_URL = HOSTNAME_PROD + REQUEST_TOKEN_POSTFIX;
+        ACCESS_TOKEN_URL = HOSTNAME_PROD + ACCESS_TOKEN_POSTFIX;
+        AUTHORIZATION_URL = HOSTNAME_PROD + AUTHORIZATION_POSTFIX;
         
 	    m_consumer = new CommonsHttpOAuthConsumer(m_strConsumerKey, m_strConsumerSecret);
 
@@ -124,6 +112,23 @@ public class VootaApi implements Serializable {
                 ACCESS_TOKEN_URL, AUTHORIZATION_URL);
 	}
 	
+	public VootaApi(String strConsumerKey, String strConsumerSecret,
+            String strCallbackUrl, String strCustomHostName)
+	{
+        m_strConsumerKey = strConsumerKey;
+        m_strConsumerSecret = strConsumerSecret;
+        m_strCallbackUrl = strCallbackUrl;
+        
+        m_strUsedHost = strCustomHostName + API_POSTFIX;
+        REQUEST_TOKEN_URL = strCustomHostName + REQUEST_TOKEN_POSTFIX;
+        ACCESS_TOKEN_URL = strCustomHostName + ACCESS_TOKEN_POSTFIX;
+        AUTHORIZATION_URL = strCustomHostName + AUTHORIZATION_POSTFIX;
+        
+        m_consumer = new CommonsHttpOAuthConsumer(m_strConsumerKey, m_strConsumerSecret);
+
+        m_provider = new CommonsHttpOAuthProvider(REQUEST_TOKEN_URL,
+                ACCESS_TOKEN_URL, AUTHORIZATION_URL);
+	}
 
 	public String getAuthorizeUrl() throws VootaApiException 
 	{
