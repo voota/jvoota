@@ -43,13 +43,18 @@ public class VootaApi implements Serializable {
     private static final String CHARSET = "UTF-8";
 
     /*OAuth parameters*/
-	private static final String m_strHostNameTest = "http://api.voota.org"; /*"http://dummy.voota.es";*/
-	private static final String m_strHostNameProduction = "http://voota.es";
+	private static final String HOSTNAME_TEST = "http://api.voota.org"; /*"http://dummy.voota.es";*/
+	private static final String HOSTNAME_PROD = "http://voota.es";
     
-	private static final String m_strAPIHostName = m_strHostNameTest + "/a1";
-    private static String REQUEST_TOKEN_URL = m_strHostNameTest + "/oauth/request_token";
-	private static String AUTHORIZATION_URL = m_strHostNameTest + "/oauth/authorize";
-	private static String ACCESS_TOKEN_URL = m_strHostNameTest + "/oauth/access_token";
+	private static final String API_POSTFIX = "/a1";
+    private static final String REQUEST_TOKEN_POSTFIX = "/oauth/request_token";
+	private static final String AUTHORIZATION_POSTFIX = "/oauth/authorize";
+	private static final String ACCESS_TOKEN_POSTFIX = "/oauth/access_token";
+	
+	private static String m_strUsedHost = "";
+	private static String REQUEST_TOKEN_URL = "";
+	private static String AUTHORIZATION_URL = "";
+	private static String ACCESS_TOKEN_URL= "";
 	
 	private String m_strConsumerKey = "";
 	private String m_strConsumerSecret = "";
@@ -75,7 +80,7 @@ public class VootaApi implements Serializable {
 	private static final String m_strPValuePolicies = "politician";
 	private static final String m_strPValueParty = "party";
     private static final String m_strPNameSort = "sort";
-    //private static final String m_strPValuePositive = "positive";
+    private static final String m_strPValuePositive = "positive";
     private static final String m_strPValueNegative = "negative";
     private static final String m_strPNamePage = "page";
 
@@ -87,16 +92,31 @@ public class VootaApi implements Serializable {
    
     private static final String m_strPValueMethodPostReview = "review";
     private static final String m_strPNameText = "text";
-   // private static final String m_strPValuePosReview = "1";
-    //private static final String m_strPValueNegReview = "-1";
+    private static final String m_strPValuePosReview = "1";
+    private static final String m_strPValueNegReview = "-1";
     public static final int m_nPageSize = 20;
     
 	public VootaApi(String strConsumerKey, String strConsumerSecret,
-            String strCallbackUrl)
+            String strCallbackUrl, boolean bIsProduction)
 	{
         m_strConsumerKey = strConsumerKey;
         m_strConsumerSecret = strConsumerSecret;
         m_strCallbackUrl = strCallbackUrl;
+        
+        if (bIsProduction)
+        {
+            m_strUsedHost = HOSTNAME_PROD + API_POSTFIX;
+            REQUEST_TOKEN_URL = HOSTNAME_PROD + REQUEST_TOKEN_POSTFIX;
+            ACCESS_TOKEN_URL = HOSTNAME_PROD + ACCESS_TOKEN_POSTFIX;
+            AUTHORIZATION_URL = HOSTNAME_PROD + AUTHORIZATION_POSTFIX;
+        }
+        else
+        {
+            m_strUsedHost = HOSTNAME_TEST + API_POSTFIX;
+            REQUEST_TOKEN_URL = HOSTNAME_TEST + REQUEST_TOKEN_POSTFIX;
+            ACCESS_TOKEN_URL = HOSTNAME_TEST + ACCESS_TOKEN_POSTFIX;
+            AUTHORIZATION_URL = HOSTNAME_TEST + AUTHORIZATION_POSTFIX;
+        }
         
 	    m_consumer = new CommonsHttpOAuthConsumer(m_strConsumerKey, m_strConsumerSecret);
 
@@ -189,7 +209,7 @@ public class VootaApi implements Serializable {
 	    
 	    try
 	    {
-    	    StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
+    	    StringBuilder strUrlParams = new StringBuilder(m_strUsedHost);
     	    strUrlParams.append("?" + m_strPNameMethod + "=" + 
     	            URLEncoder.encode(m_strPValueMethodSearch, CHARSET));
     	    strUrlParams.append("&" + m_strPNameSearchString + "=" + 
@@ -226,7 +246,7 @@ public class VootaApi implements Serializable {
 	    return listEntities;
 	}
 	
-	public ArrayList<EntityInfo> getTopSix() throws VootaApiException
+	public ArrayList<EntityInfo> getTop() throws VootaApiException
 	{
 	    checkConnection();
 	    
@@ -234,7 +254,7 @@ public class VootaApi implements Serializable {
 	    
 	    try
 	    {
-    	    StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
+    	    StringBuilder strUrlParams = new StringBuilder(m_strUsedHost);
     	    strUrlParams.append("?" + m_strPNameMethod + "=" + 
     	            URLEncoder.encode(m_strPValueMethodTop, CHARSET));
     	        	    
@@ -314,7 +334,7 @@ public class VootaApi implements Serializable {
         
         try
         {
-            StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
+            StringBuilder strUrlParams = new StringBuilder(m_strUsedHost);
             strUrlParams.append("?" + m_strPNameMethod + "=" + 
                     URLEncoder.encode(m_strPValueMethodEntities, CHARSET) 
                     + "&" + m_strPNameType + "=" + 
@@ -368,7 +388,7 @@ public class VootaApi implements Serializable {
         ArrayList<ReviewInfo> m_listReviews = new ArrayList<ReviewInfo>();
         try
         {
-            StringBuilder strUrlParams = new StringBuilder(m_strAPIHostName);
+            StringBuilder strUrlParams = new StringBuilder(m_strUsedHost);
             strUrlParams.append("?" + m_strPNameMethod + "=" + 
                     URLEncoder.encode(m_strPValueMethodReviews, CHARSET) + "&" +
                     m_strPNameType + "=");
@@ -426,7 +446,7 @@ public class VootaApi implements Serializable {
     	    
     	    m_consumer.setTokenWithSecret(m_strAccessToken, m_strTokenSecret);
             
-    	    String url = OAuth.addQueryParameters(m_strAPIHostName, 
+    	    String url = OAuth.addQueryParameters(m_strUsedHost, 
     	            URLEncoder.encode(m_strPNameMethod, CHARSET),
     	            URLEncoder.encode(m_strPValueMethodPostReview, CHARSET));
     		
@@ -500,7 +520,7 @@ public class VootaApi implements Serializable {
   
         try
         {
-            StringBuilder builder = new StringBuilder(m_strAPIHostName);
+            StringBuilder builder = new StringBuilder(m_strUsedHost);
             builder.append("?" + m_strPNameMethod + "=" + 
                     URLEncoder.encode(m_strPValueMethodEntity, CHARSET));
             if (oldEntity.getType() == EntityInfo.EntityType.kParty)
@@ -549,7 +569,7 @@ public class VootaApi implements Serializable {
         HttpConnectionParams.setConnectionTimeout(params, TIMEOUT);
         HttpConnectionParams.setSoTimeout(params, TIMEOUT);
 
-        HttpGet get = new HttpGet(m_strAPIHostName);
+        HttpGet get = new HttpGet(m_strUsedHost);
         get.setParams(params);
         HttpClient httpClient = new DefaultHttpClient();
         
