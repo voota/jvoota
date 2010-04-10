@@ -1,14 +1,13 @@
 package org.voota.api;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-//import android.graphics.Bitmap;
-//import android.graphics.BitmapFactory;
 
 public class EntityInfo implements Serializable
 {
@@ -40,18 +39,18 @@ public class EntityInfo implements Serializable
     private EntityType m_type;
     private String m_strName;
     private String m_strLongName;
-    private URL m_urlImage;
-    private URL m_urlImageBW;
-    private URL m_urlImageS;
+    private String m_strImage;
+    private String m_strImageBW;
+    private String m_strImageS;
     private byte[] m_bImageSmall;
-    private URL m_urlImageSBW;
+    private String m_strImageSBW;
     private int m_nPositiveVotes;
     private int m_nRecPositiveVotes;
     private int m_nNegativeVotes;
     private int m_nRecNegativeVotes;
     private String m_strDescription;
     
-    public EntityInfo(JSONObject jsonEntity) throws JSONException, MalformedURLException
+    public EntityInfo(JSONObject jsonEntity) throws JSONException
     {
         String strType = jsonEntity.getString(JSON_PARAM_TYPE);  
         if (strType.equals(JSON_VALUE_POLICIES))
@@ -65,10 +64,10 @@ public class EntityInfo implements Serializable
         m_lID = jsonEntity.getLong(JSON_PARAM_ID);
         m_strName = jsonEntity.getString(JSON_PARAM_NAME);
         m_strLongName = jsonEntity.getString(JSON_PARAM_LNAME);
-        m_urlImage = new URL(jsonEntity.getString(JSON_PARAM_IMAGE));
-        m_urlImageBW = new URL(jsonEntity.getString(JSON_PARAM_IMAGE_BW));
-        m_urlImageS = new URL(jsonEntity.getString(JSON_PARAM_IMAGE_S));
-        m_urlImageSBW = new URL(jsonEntity.getString(JSON_PARAM_IMAGE_S_BW));
+        m_strImage = jsonEntity.getString(JSON_PARAM_IMAGE);
+        m_strImageBW = jsonEntity.getString(JSON_PARAM_IMAGE_BW);
+        m_strImageS = jsonEntity.getString(JSON_PARAM_IMAGE_S);
+        m_strImageSBW = jsonEntity.getString(JSON_PARAM_IMAGE_S_BW);
         m_nPositiveVotes = jsonEntity.getInt(JSON_PARAM_POS_VOTES);
         m_nRecPositiveVotes = jsonEntity.getInt(JSON_PARAM_REC_POS_VOTES);
         m_nNegativeVotes = jsonEntity.getInt(JSON_PARAM_NEG_VOTES);
@@ -77,7 +76,7 @@ public class EntityInfo implements Serializable
         
         try
         {
-            m_bImageSmall = VootaApi.getUrlImageBytes(m_urlImageS);
+            m_bImageSmall = VootaApi.getUrlImageBytes(m_strImageS);
         }
         catch (VootaApiException e)
         {
@@ -105,24 +104,24 @@ public class EntityInfo implements Serializable
         return m_strLongName;
     }
     
-    public final URL getUrlImage()
+    public final String getUrlImage()
     {
-        return m_urlImage;
+        return m_strImage;
     }
     
-    public final URL getUrlImageBW()
+    public final String getUrlImageBW()
     {
-        return m_urlImageBW;
+        return m_strImageBW;
     }
     
-    public final URL getUrlImageSmall()
+    public final String getUrlImageSmall()
     {
-        return m_urlImageS;
+        return m_strImageS;
     }
     
-    public final URL getUrlImageBWSmall()
+    public final String getUrlImageBWSmall()
     {
-        return m_urlImageSBW;
+        return m_strImageSBW;
     }
     
     public final int getPositiveVotes()

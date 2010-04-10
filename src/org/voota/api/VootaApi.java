@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -324,10 +325,34 @@ public class VootaApi implements Serializable {
 	    } 
 	    catch (IOException e) 
 	    {
+	        e.printStackTrace();
 	    }
 
 	    return bytesImage;
 	}
+	
+    static public byte[] getUrlImageBytes(String strUrlImage) throws VootaApiException
+    {
+        byte[] bytesImage = null;
+        try 
+        {
+            URL urlImage = new URL(getEncodedImageUrl(strUrlImage));
+            HttpURLConnection conn= (HttpURLConnection)urlImage.openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            
+            int bytesAvavilable = conn.getContentLength();
+            bytesImage = new byte[bytesAvavilable];
+            is.read(bytesImage);
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        return bytesImage;
+    }
 
     private ArrayList<EntityInfo> getListOfEntitiesByPage(String strPoliciesOrParty, 
             boolean bIsSortedPositive, int nPageNumber) 
@@ -640,5 +665,24 @@ public class VootaApi implements Serializable {
 	    }
 	    
 	    return strBuilder.toString();
+	}
+	
+	static private String getEncodedImageUrl(String strImageUrl)
+	{  
+	    String strResult = strImageUrl;
+	    try
+	    {
+    	    int nLastIndex = strImageUrl.lastIndexOf("/");
+    	    if (nLastIndex != -1)
+    	    {
+        	    strResult = strImageUrl.substring(0, nLastIndex + 1); 
+        	    strResult += URLEncoder.encode(strImageUrl.substring(nLastIndex + 1), CHARSET);
+    	    }
+	    }
+	    catch (UnsupportedEncodingException e)
+	    {
+	        strResult = strImageUrl;
+	    }
+        return strResult;
 	}
 }
