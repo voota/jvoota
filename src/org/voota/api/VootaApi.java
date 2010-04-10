@@ -507,7 +507,7 @@ public class VootaApi implements Serializable {
 		    HttpResponse response = client.execute(post);
 	        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 	        {
-	            throw new VootaApiException(VootaApiException.kErrorCantPostReview);
+	            throw new VootaApiException(VootaApiException.kErrorReviewNotPosted);
 	        }
 
             /*} 
@@ -530,16 +530,16 @@ public class VootaApi implements Serializable {
     		HttpResponse response = client.execute(post);
     		if (response.getStatusLine().getStatusCode() != 200)
     		{
-    			throw new VootaApiException(VootaApiException.kErrorCantPostReview);
+    			throw new VootaApiException(VootaApiException.kErrorReviewNotPosted);
     		}*/
     	}
     	catch(OAuthException e)
     	{
-            throw new VootaApiException(VootaApiException.kErrorCantPostReview);
+            throw new VootaApiException(VootaApiException.kErrorReviewNotPosted);
     	}
     	catch(IOException e)
     	{
-    		throw new VootaApiException(VootaApiException.kErrorCantPostReview);
+    		throw new VootaApiException(VootaApiException.kErrorReviewNotPosted);
     	}
     }
     
