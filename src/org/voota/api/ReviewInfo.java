@@ -43,7 +43,8 @@ public class ReviewInfo implements Serializable
 
         m_nReviewValue = jsonReview.getInt(JSON_PARAM_VALUE);
         m_nID = jsonReview.getInt(JSON_PARAM_ID);
-        m_strReviewText = jsonReview.getString(JSON_PARAM_TEXT);
+        m_strReviewText = jsonReview.isNull(JSON_PARAM_TEXT) ? 
+                "" : jsonReview.getString(JSON_PARAM_TEXT);
     }
     
     public ReviewInfo(long nID, int nValue, EntityType type, String strText)

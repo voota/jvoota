@@ -309,7 +309,7 @@ public class VootaApi implements Serializable {
         return getListOfEntitiesByPage(m_strPValueParty, bIsSortedPositive, nPage);
     } 
 	
-	static public byte[] getUrlImageBytes(URL urlImage) throws VootaApiException
+	static public byte[] getUrlImageBytes(URL urlImage)
 	{
 		byte[] bytesImage = null;
 	    try 
@@ -321,7 +321,8 @@ public class VootaApi implements Serializable {
 	        
 	        int bytesAvavilable = conn.getContentLength();
 	        bytesImage = new byte[bytesAvavilable];
-	        is.read(bytesImage);
+	        int readed = is.read(bytesImage);
+	        readed += 1;
 	    } 
 	    catch (IOException e) 
 	    {
@@ -344,11 +345,18 @@ public class VootaApi implements Serializable {
             
             int bytesAvavilable = conn.getContentLength();
             bytesImage = new byte[bytesAvavilable];
-            is.read(bytesImage);
+            int nReaded = 0, nSum = 0;
+            
+            while (bytesAvavilable > nSum)
+            {
+                nReaded = is.read(bytesImage, nSum, bytesAvavilable - nSum);
+                nSum += nReaded; 
+            }
         } 
         catch (IOException e) 
         {
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw new VootaApiException(0, e.toString());
         }
 
         return bytesImage;
