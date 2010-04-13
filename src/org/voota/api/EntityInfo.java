@@ -1,3 +1,21 @@
+/*
+ * This file is part of the Voota package.
+ * (c) 2010 Tatyana Ulyanova <levkatata.voota@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * This file contains implementation of EntityInfo class. This class includes all
+ * information about one entity - politician or party.
+ *
+ * @package    Voota
+ * @subpackage Api
+ * @author     Tatyana Ulyanova
+ * @version    1.0
+ */
+
 package org.voota.api;
 
 import java.io.Serializable;

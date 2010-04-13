@@ -1,3 +1,23 @@
+/*
+ * This file is part of the Voota package.
+ * (c) 2010 Tatyana Ulyanova <levkatata.voota@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * This file contains implementation of VootaApi class. This class includes 
+ * implementation of all client-side methods provided by Voota REST Api 
+ * for getting/posting information from/to Voota server. 
+ * Also there are OAuth authorization client-side method implementations.
+ *
+ * @package    Voota
+ * @subpackage Api
+ * @author     Tatyana Ulyanova
+ * @version    1.0
+ */
+
 package org.voota.api;
 
 import java.io.BufferedReader;
@@ -143,20 +163,6 @@ public class VootaApi implements Serializable {
         {
             throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
         }
-        /*catch (OAuthMessageSignerException e) 
-        {
-            e.printStackTrace();
-        } 
-        catch (OAuthNotAuthorizedException e) 
-        {
-            e.printStackTrace();
-        } catch (OAuthExpectationFailedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (OAuthCommunicationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
 
 	    return strAuthUrl;
 	}
@@ -173,28 +179,6 @@ public class VootaApi implements Serializable {
 	    {
 	        throw new VootaApiException(VootaApiException.kErrorNoAuthorize);
 	    }
-	    /*catch (OAuthMessageSignerException e)
-	    {
-            // TODO Auto-generated catch block
-            //e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize, 
-                    e.getMessage() + " " + e.toString());
-        } catch (OAuthNotAuthorizedException e) {
-            // TODO Auto-generated catch block
-            //e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize,
-                    e.getMessage() + " " + e.toString());
-        } catch (OAuthExpectationFailedException e) {
-            // TODO Auto-generated catch block
-            //e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize,
-                    e.getMessage() + " " + e.toString());
-        } catch (OAuthCommunicationException e) {
-            // TODO Auto-generated catch block
-            //e.printStackTrace();
-            throw new VootaApiException(VootaApiException.kErrorNoAuthorize,
-                    e.getMessage() + " " + e.toString());
-        }*/
     }
 	
 	public String getAccessToken()
@@ -321,12 +305,16 @@ public class VootaApi implements Serializable {
 	        
 	        int bytesAvavilable = conn.getContentLength();
 	        bytesImage = new byte[bytesAvavilable];
-	        int readed = is.read(bytesImage);
-	        readed += 1;
+            int nReaded = 0, nSum = 0;
+            
+            while (bytesAvavilable > nSum)
+            {
+                nReaded = is.read(bytesImage, nSum, bytesAvavilable - nSum);
+                nSum += nReaded; 
+            }
 	    } 
 	    catch (IOException e) 
 	    {
-	        e.printStackTrace();
 	    }
 
 	    return bytesImage;
@@ -355,8 +343,6 @@ public class VootaApi implements Serializable {
         } 
         catch (IOException e) 
         {
-            //e.printStackTrace();
-            throw new VootaApiException(0, e.toString());
         }
 
         return bytesImage;
@@ -461,12 +447,10 @@ public class VootaApi implements Serializable {
         }
         catch(IOException e)
         {
-            e.printStackTrace();
             throw new VootaApiException(VootaApiException.kErrorNoRespond);
         }
         catch(JSONException e)
         {
-            e.printStackTrace();
             throw new VootaApiException(VootaApiException.kErrorNoRespond);
         }
         
@@ -506,8 +490,6 @@ public class VootaApi implements Serializable {
                 listParams.add(new BasicNameValuePair(m_strPNameText, newReview.getText()));
             }
 
-//    		try 
-//    		{
             post.setEntity(new UrlEncodedFormEntity(listParams));
             m_consumer.sign(post);
             
@@ -517,29 +499,6 @@ public class VootaApi implements Serializable {
 	        {
 	            throw new VootaApiException(VootaApiException.kErrorReviewNotPosted);
 	        }
-
-            /*} 
-            catch (OAuthCommunicationException e) 
-            {
-                e.printStackTrace();
-            }
-    		catch (OAuthExpectationFailedException e)
-    		{
-    		    e.printStackTrace();
-    		}
-    		catch (OAuthMessageSignerException e)
-    		{
-    		    e.printStackTrace();
-    		}
-    		catch (IllegalArgumentException e)
-    		{
-    		    e.printStackTrace();
-    		}
-    		HttpResponse response = client.execute(post);
-    		if (response.getStatusLine().getStatusCode() != 200)
-    		{
-    			throw new VootaApiException(VootaApiException.kErrorReviewNotPosted);
-    		}*/
     	}
     	catch(OAuthException e)
     	{
@@ -589,12 +548,10 @@ public class VootaApi implements Serializable {
         }
         catch(IOException e)
         {
-            e.printStackTrace();
             throw new VootaApiException(VootaApiException.kErrorNoRespond);
         }
         catch(JSONException e)
         {
-            e.printStackTrace();
             throw new VootaApiException(VootaApiException.kErrorNoRespond);
         }
         
@@ -658,7 +615,6 @@ public class VootaApi implements Serializable {
 	    }
 	    catch (Throwable e)
 	    {
-	        e.printStackTrace();
 	    }
 	    finally
 	    {
@@ -668,7 +624,6 @@ public class VootaApi implements Serializable {
             } 
             catch (IOException e) 
             {
-                e.printStackTrace();
             }
 	    }
 	    
