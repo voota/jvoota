@@ -39,6 +39,9 @@ public class ReviewInfo implements Serializable
     private EntityType m_type;
     private String m_strReviewText;
     
+    /**
+     * Default constructor of class ReviewInfo that creates empty review object.
+     */
     public ReviewInfo()
     {
         m_nReviewValue = REVIEW_VALUE_POSITIVE;
@@ -47,6 +50,16 @@ public class ReviewInfo implements Serializable
         m_strReviewText = "";
     }
     
+    /**
+     * Constructor of class ReviewInfo that creates object based on 
+     * appropriate JSONObject data. Constructor parses json object and extracts
+     * each field by key.
+     *
+     * @param  jsonReview    object in json format contained appropriate review fields
+     * @throws JSONException if JSONObject parameter doesn't contain some field
+     * @see <a href="http://www.json.org/javadoc/org/json/JSONObject.html">JSONObject</a>
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public ReviewInfo(JSONObject jsonReview) throws JSONException
     {
         String strType = jsonReview.getString(JSON_PARAM_TYPE);
@@ -65,6 +78,15 @@ public class ReviewInfo implements Serializable
                 "" : jsonReview.getString(JSON_PARAM_TEXT);
     }
     
+    /**
+     * Constructor of class ReviewInfo that creates object based on parameters. 
+     *
+     * @param nID     a unique identifier of the review within a type
+     * @param nValue  positive (1) or negative (-1) review
+     * @param type    entity type was reviewed 
+     * @param strText text of review
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public ReviewInfo(long nID, int nValue, EntityType type, String strText)
     {
     	m_nID = nID;
@@ -73,31 +95,67 @@ public class ReviewInfo implements Serializable
     	m_strReviewText = strText;
     }
     
+    /**
+     * Returns entity type was reviewed. 
+     *
+     * @returns entity type
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public EntityType getType()
     {
         return m_type;
     }
     
+    /**
+     * Returns boolean value indicates if review is positive. 
+     *
+     * @returns true if review is positive, false - otherwise
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public boolean isReviewPositive()
     {
         return (m_nReviewValue == REVIEW_VALUE_POSITIVE) ? true : false ;
     }
     
+    /**
+     * Returns a unique identifier of the review within a type. 
+     *
+     * @returns review ID
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public long getID()
     {
         return m_nID;
     }
     
+    /**
+     * Returns review text. 
+     *
+     * @returns review text
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public String getText()
     {
         return m_strReviewText;
     }
     
+    /**
+     * Returns review value: 1 - positive review, -1 - negative review. 
+     *
+     * @returns review value
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public int getReviewValue()
     {
     	return m_nReviewValue;
     }
     
+    /**
+     * Set review text. 
+     *
+     * @param strText review text
+     * @see <a href="http://trac.voota.org/wiki/review_element">Review element</a>
+     */
     public void setReviewText(String strText)
     {
         m_strReviewText = strText;

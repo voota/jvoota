@@ -68,6 +68,16 @@ public class EntityInfo implements Serializable
     private int m_nRecNegativeVotes;
     private String m_strDescription;
     
+    /**
+     * Constructor of class EntityInfo that creates object based on 
+     * appropriate JSONObject data. Constructor parses json object and extracts
+     * each field by key. Constructor also loads small image data from server.
+     *
+     * @param  jsonEntity    object in json format contained appropriate entity fields
+     * @throws JSONException if JSONObject parameter doesn't contain some field
+     * @see <a href="http://www.json.org/javadoc/org/json/JSONObject.html">JSONObject</a>
+     * @see <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
     public EntityInfo(JSONObject jsonEntity) throws JSONException
     {
         String strType = jsonEntity.getString(JSON_PARAM_TYPE);  
@@ -102,81 +112,186 @@ public class EntityInfo implements Serializable
         }
     }
     
-    public final long getID()
+    /**
+     * Returns a unique identifier of the entity within a type.  
+     *
+     * @return entity ID
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public long getID()
     {
         return m_lID;
     }
     
-    public final EntityType getType()
+    /**
+     * Returns entity type.  
+     *
+     * @return value of {@link EntityType} emun
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     * @see    EntityInfo#EntityType EntityType
+     */
+    public EntityType getType()
     {
         return m_type;
     }
     
-    public final String getName()
+    /**
+     * Returns entity name.  
+     *
+     * @return entity name
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public String getName()
     {
         return m_strName;
     }
     
-    public final String getLongName()
+    /**
+     * Returns entity long name.  
+     *
+     * @return entity long name
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public String getLongName()
     {
         return m_strLongName;
     }
     
-    public final String getUrlImage()
+    /**
+     * Returns String object represents color image url to download. It returns String
+     * object because url could contain some special characters which would converted
+     * in used charset in future calls.  
+     *
+     * @return image url in String object
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public String getUrlImage()
     {
         return m_strImage;
     }
     
-    public final String getUrlImageBW()
+    /**
+     * Returns String object represents black-write image url to download. It returns String
+     * object because url could contain some special characters which would converted
+     * in used charset in future calls.  
+     *
+     * @return black-white image url in String object
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public String getUrlImageBW()
     {
         return m_strImageBW;
     }
     
-    public final String getUrlImageSmall()
+    /**
+     * Returns String object represents small color image url to download. 
+     * It returns String object because url could contain some special characters 
+     * which would converted in used charset in future calls.  
+     *
+     * @return small image url in String object
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public String getUrlImageSmall()
     {
         return m_strImageS;
     }
     
-    public final String getUrlImageBWSmall()
+    /**
+     * Returns String object represents small black-write image url to download. 
+     * It returns String object because url could contain some special characters 
+     * which would converted in used charset in future calls.  
+     *
+     * @return small black-white image url in String object
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public String getUrlImageBWSmall()
     {
         return m_strImageSBW;
     }
     
-    public final int getPositiveVotes()
+    /**
+     * Returns positive votes.
+     *
+     * @return positive votes
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public int getPositiveVotes()
     {
         return m_nPositiveVotes;
     }
     
-    public final int getRecPositiveVotes()
+    /**
+     * Returns recent positive votes.
+     *
+     * @return recent positive votes
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public int getRecPositiveVotes()
     {
         return m_nRecPositiveVotes;
     }
     
-    public final int getNegativeVotes()
+    /**
+     * Returns negative votes.
+     *
+     * @return negative votes
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public int getNegativeVotes()
     {
         return m_nNegativeVotes;
     }
     
-    public final int getRecNegativeVotes()
+    /**
+     * Returns recent negative votes.
+     *
+     * @return positive votes
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public int getRecNegativeVotes()
     {
         return m_nRecNegativeVotes;
     }
     
-    public final String getDescription()
+    /**
+     * Returns entity description.
+     *
+     * @return entity description
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public String getDescription()
     {
         return m_strDescription;
     }
     
-    public final byte[] getBytesImageS()
+    /**
+     * Returns byte array contains small image data was loaded.
+     *
+     * @return small image data in byte array
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
+    public byte[] getBytesImageS()
     {
         return m_bImageSmall;
     }
     
+    /**
+     * Set new value of positive votes.
+     *
+     * @param nNewValue new value of positive votes
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
     public void setPositiveVotes(int nNewValue)
     {
         m_nPositiveVotes = nNewValue;
     }
     
+    /**
+     * Set new value of negative votes.
+     *
+     * @param nNewValue new value of negative votes
+     * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
+     */
     public void setNegativeVotes(int nNewValue)
     {
         m_nNegativeVotes = nNewValue;
