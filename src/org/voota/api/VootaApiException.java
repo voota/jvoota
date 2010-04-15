@@ -36,18 +36,39 @@ public class VootaApiException extends Throwable
     private int m_nErrorCode;
     private String m_strErrorMessage;
     
+    /**
+     * Constructor of class VootaApiException creates object based on error code.  
+     *
+     * @param  nError  error code must be one of error code constants defined on
+     *                 VootaApiException
+     */
     public VootaApiException (int nErrorCode)
     {
        m_nErrorCode = nErrorCode;
        m_strErrorMessage = "";
     }
     
+    /**
+     * Constructor of class VootaApiException creates object based on error code 
+     * and message.  
+     *
+     * @param  nError     error code
+     * @param  strMessage error message
+     */
     public VootaApiException (int nErrorCode, String strMessage)
     {
         m_nErrorCode = nErrorCode;
         m_strErrorMessage = strMessage;
     }
     
+    /**
+     * Returns exception error message based on error code. If error message was set
+     * on constructor it would return.
+     * This method is depreciated because it returns English error messages. 
+     * Use getCode() method and create appropriate error message. 
+     *
+     * @return  English error message
+     */
     @Deprecated
     public String getMessage()
     {
@@ -76,6 +97,12 @@ public class VootaApiException extends Throwable
         return strError;
     }
     
+    /**
+     * Returns exception error code. This code is one of error code constants 
+     * defined in this class.  
+     *
+     * @return exception error code
+     */
     public int getErrorCode()
     {
         return m_nErrorCode;

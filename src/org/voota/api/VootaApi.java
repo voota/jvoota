@@ -115,6 +115,15 @@ public class VootaApi implements Serializable {
     private static final String m_strPValueNegReview = "-1";
     public static final int m_nPageSize = 20;
     
+    /**
+     * Constructor of class VootaApi creates object for working with Voota REST API 
+     * methods and OAuth authorization. This object uses default server host name.  
+     *
+     * @param strConsumerKey    OAuth consumer key
+     * @param strConsumerSecret OAuth consumer secret
+     * @param strCallbackUrl    callback url to return to application after 
+     *                          authorization was done
+     */
 	public VootaApi(String strConsumerKey, String strConsumerSecret,
             String strCallbackUrl)
 	{
@@ -133,6 +142,17 @@ public class VootaApi implements Serializable {
                 ACCESS_TOKEN_URL, AUTHORIZATION_URL);
 	}
 	
+    /**
+     * Constructor of class VootaApi creates object for working with Voota REST API 
+     * methods and OAuth authorization. This object uses custom sever host name passed 
+     * in corresponding parameter.
+     *
+     * @param strConsumerKey    OAuth consumer key
+     * @param strConsumerSecret OAuth consumer secret
+     * @param strCallbackUrl    callback url to return to application after 
+     *                          authorization was done
+     * @param strCustomHostName host name will be used as Voota REST API server name 
+     */
 	public VootaApi(String strConsumerKey, String strConsumerSecret,
             String strCallbackUrl, String strCustomHostName)
 	{
@@ -151,6 +171,14 @@ public class VootaApi implements Serializable {
                 ACCESS_TOKEN_URL, AUTHORIZATION_URL);
 	}
 
+    /**
+     * Returns OAuth authorization url in String object will be used for opening
+     * authorization page in browser.
+     *
+     * @return                   OAuth authorization url
+     * @throws VootaApiException if method fails to retrieve OAuth authorization url
+     * @see org.voota.api.VootaApiException VootaApiException
+     */
 	public String getAuthorizeUrl() throws VootaApiException 
 	{
         String strAuthUrl = null;
@@ -167,6 +195,17 @@ public class VootaApi implements Serializable {
 	    return strAuthUrl;
 	}
 
+    /**
+     * Gets access token and token secret from consumer used request token returned 
+     * from authorization page to application. This data is saved in corresponding
+     * variables inside of VootaApi object and will be used to post authorization
+     * data to server.
+     *
+     * @param  strRequestToken   OAuth request token was returned by consumer
+     * @throws VootaApiException if method fails to retrieve access token and token
+     *                           secret
+     * @see org.voota.api.VootaApiException VootaApiException
+     */
 	public void convertToAccessToken(String strRequestToken) throws VootaApiException 
     {
 	    try 
@@ -181,17 +220,40 @@ public class VootaApi implements Serializable {
 	    }
     }
 	
+    /**
+     * Returns OAuth access token retrieved from server earlier.
+     *
+     * @return  String object represents OAuth access token
+     */
 	public String getAccessToken()
 	{
 	    return m_strAccessToken;
 	}
 	
+    /**
+     * Returns OAuth token secret retrieved from server earlier.
+     *
+     * @return  String object represents OAuth token secret
+     */
 	public String getTokenSecret()
 	{
 	    return m_strTokenSecret;
 	}
 	
-	public ArrayList<EntityInfo> getSearchEntities(String strSearch) throws VootaApiException
+    /**
+     * Returns list of entities got from server as search result by keyword.
+     *
+     * @param  strSearch         keyword for searching
+     * @return                   ArrayList of EntityInfo objects represent search
+     *                           results
+     * @throws VootaApiException if method fails to retrieve search results from
+     *                           server
+     * @see <a href="http://trac.voota.org/wiki/search">Search Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.EntityInfo        EntityInfo
+     */
+	public ArrayList<EntityInfo> getSearchEntities(String strSearch) 
+	    throws VootaApiException
 	{
 	    checkConnection();
 	    
@@ -236,6 +298,17 @@ public class VootaApi implements Serializable {
 	    return listEntities;
 	}
 	
+    /**
+     * Returns list of entities got from server as top entities.
+     *
+     * @return                   ArrayList of EntityInfo objects represent top
+     *                           entities
+     * @throws VootaApiException if method fails to retrieve top entities from
+     *                           server
+     * @see <a href="http://trac.voota.org/wiki/top">Top Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.EntityInfo        EntityInfo
+     */
 	public ArrayList<EntityInfo> getTop() throws VootaApiException
 	{
 	    checkConnection();
@@ -281,24 +354,66 @@ public class VootaApi implements Serializable {
 	}
 	
 
+    /**
+     * Returns list of politicians by defined number of page got from server. Sort
+     * order may be either by positive votes or negative votes and specifies in 
+     * parameter.
+     *
+     * @param  bIsSortedPositive variable shows how politicians should be
+     *                           sorted: true - by positive votes, false - by
+     *                           negative votes
+     * @param  nPage             number of page list to retrieve from server
+     * @return                   ArrayList of EntityInfo objects represent 
+     *                           politicians
+     * @throws VootaApiException if method fails to retrieve politicians from
+     *                           server
+     * @see <a href="http://trac.voota.org/wiki/entities">Entities Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.EntityInfo        EntityInfo
+     */
 	public ArrayList<EntityInfo> getListOfPoliciesByPage (boolean bIsSortedPositive, int nPage) 
 	    throws VootaApiException
 	{
 	    return getListOfEntitiesByPage(m_strPValuePolicies, bIsSortedPositive, nPage);
 	}
 	
+    /**
+     * Returns list of parties by defined number of page got from server. Sort
+     * order may be either by positive votes or negative votes and specifies in 
+     * parameter.
+     *
+     * @param  bIsSortedPositive variable shows how parties should be
+     *                           sorted: true - by positive votes, false - by
+     *                           negative votes
+     * @param  nPage             number of page list to retrieve from server
+     * @return                   ArrayList of EntityInfo objects represent 
+     *                           parties
+     * @throws VootaApiException if method fails to retrieve parties from
+     *                           server
+     * @see <a href="http://trac.voota.org/wiki/entities">Entities Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.EntityInfo        EntityInfo
+     */
 	public ArrayList<EntityInfo> getListOfPartyByPage (boolean bIsSortedPositive, int nPage) 
 	    throws VootaApiException
     {
         return getListOfEntitiesByPage(m_strPValueParty, bIsSortedPositive, nPage);
     } 
 	
+    /**
+     * Loads image data by url and returns byte array filled by this data. If
+     * method fails to load image, it will return null.
+     *
+     * @param  urlImage          url represents image to load
+     * @return                   byte array filled by image data or null if image
+     *                           loading fails
+     */
 	static public byte[] getUrlImageBytes(URL urlImage)
 	{
 		byte[] bytesImage = null;
 	    try 
 	    {
-	        HttpURLConnection conn= (HttpURLConnection)urlImage.openConnection();
+	        HttpURLConnection conn = (HttpURLConnection)urlImage.openConnection();
 	        conn.setDoInput(true);
 	        conn.connect();
 	        InputStream is = conn.getInputStream();
@@ -320,7 +435,17 @@ public class VootaApi implements Serializable {
 	    return bytesImage;
 	}
 	
-    static public byte[] getUrlImageBytes(String strUrlImage) throws VootaApiException
+    /**
+     * Loads image data by url and returns byte array filled by this data. If
+     * method fails to load image, it will return null. This method takes url as
+     * String object and converts file name to used character set, because it
+     * may contain Spanish symbols. 
+     *
+     * @param  urlImage          url in String object represents image to load
+     * @return                   byte array filled by image data or null if image
+     *                           loading fails
+     */
+    static public byte[] getUrlImageBytes(String strUrlImage)
     {
         byte[] bytesImage = null;
         try 
@@ -348,7 +473,25 @@ public class VootaApi implements Serializable {
         return bytesImage;
     }
 
-    private ArrayList<EntityInfo> getListOfEntitiesByPage(String strPoliciesOrParty, 
+    /**
+     * Returns list of entities by defined number of page got from server. Sort
+     * order may be either by positive votes or negative votes and specifies in 
+     * parameter. Method is used by other Voota Api methods.
+     *
+     * @param  strPoliticOrParty type of entity to get
+     * @param  bIsSortedPositive variable shows how entities should be
+     *                           sorted: true - by positive votes, false - by
+     *                           negative votes
+     * @param  nPage             number of page list to retrieve from server
+     * @return                   ArrayList of EntityInfo objects represent 
+     *                           entities
+     * @throws VootaApiException if method fails to retrieve entities from
+     *                           server
+     * @see <a href="http://trac.voota.org/wiki/entities">Entities Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.EntityInfo        EntityInfo
+     */
+    private ArrayList<EntityInfo> getListOfEntitiesByPage(String strPoliticOrParty, 
             boolean bIsSortedPositive, int nPageNumber) 
         throws VootaApiException
     {
@@ -362,7 +505,7 @@ public class VootaApi implements Serializable {
             strUrlParams.append("?" + m_strPNameMethod + "=" + 
                     URLEncoder.encode(m_strPValueMethodEntities, CHARSET) 
                     + "&" + m_strPNameType + "=" + 
-                    URLEncoder.encode(strPoliciesOrParty, CHARSET));
+                    URLEncoder.encode(strPoliticOrParty, CHARSET));
             if (!bIsSortedPositive)
             {
                 strUrlParams.append("&" + m_strPNameSort + "=" + 
@@ -405,7 +548,20 @@ public class VootaApi implements Serializable {
         return listEntities;
     }
 	
-    public ArrayList<ReviewInfo> getReviews(EntityInfo entity) throws VootaApiException
+    /**
+     * Returns list of reviews by defined entity got from server.
+     *
+     * @param  entity            information about entity to get reviews by one
+     * @return                   ArrayList of ReviewInfo objects represent 
+     *                           reviews by given entity
+     * @throws VootaApiException if method fails to retrieve list of reviews from
+     *                           server
+     * @see <a href="http://trac.voota.org/wiki/reviews">Reviews Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.ReviewInfo        ReviewInfo
+     */
+    public ArrayList<ReviewInfo> getReviews(EntityInfo entity) 
+        throws VootaApiException
     {
         checkConnection();
         
@@ -457,6 +613,17 @@ public class VootaApi implements Serializable {
         return m_listReviews;
     }
     
+    /**
+     * Post a review to server. This method uses OAuth authorization data to post.
+     *
+     * @param  newReview         information about new review to post 
+     * @param  strAccessToken    OAuth access token
+     * @param  strTokenSecret    OAuth token secret 
+     * @throws VootaApiException if method fails to post a review to server
+     * @see <a href="http://trac.voota.org/wiki/post_review">Review Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.ReviewInfo        ReviewInfo
+     */
     public void postReview(ReviewInfo newReview, String strAccessToken, 
             String strTokenSecret) throws VootaApiException
     {
@@ -510,6 +677,18 @@ public class VootaApi implements Serializable {
     	}
     }
     
+    /**
+     * Returns information about entity got from server.
+     *
+     * @param  oldEntity         information about entity to get (uses only ID 
+     *                           and type) 
+     * @return                   EntityInfo object represents one entity
+     * @throws VootaApiException if method fails to retrieve list of reviews from
+     *                           server
+     * @see <a href="http://trac.voota.org/wiki/entity">Entity Voota API method</a>
+     * @see org.voota.api.VootaApiException VootaApiException
+     * @see org.voota.api.EntityInfo        EntityInfo
+     */
     public EntityInfo getEntityInfo(EntityInfo oldEntity) throws VootaApiException
     {
         checkConnection();
@@ -558,6 +737,12 @@ public class VootaApi implements Serializable {
         return newEntity;
     }
     
+    /**
+     * Check connection with server.
+     *
+     * @throws VootaApiException if connection can't be establish
+     * @see org.voota.api.VootaApiException VootaApiException
+     */
 	private void checkConnection() throws VootaApiException
 	{
         HttpParams params = new BasicHttpParams();
@@ -578,7 +763,17 @@ public class VootaApi implements Serializable {
         }
     }
 	
-	private void setAndCheckTokens(String strAccessToken, String strTokenSecret) throws VootaApiException
+    /**
+     * Sets and checks access token and token secret got from application. Method
+     * is used by other VootaApi method to verify if user is authorized.
+     *
+     * @param  strAccessToken    OAuth access token
+     * @param  strTokenSecret    OAuth token secret 
+     * @throws VootaApiException if OAuth information is empty
+     * @see org.voota.api.VootaApiException VootaApiException
+     */
+	private void setAndCheckTokens(String strAccessToken, String strTokenSecret) 
+	    throws VootaApiException
 	{
 	    if (m_strAccessToken.length() == 0)
         {
@@ -599,6 +794,13 @@ public class VootaApi implements Serializable {
 	    }
 	}
 	
+    /**
+     * Convert InputStream object to String object. Method is used by other VootaApi
+     * methods to convert content of server reply to String.
+     *
+     * @param  istream    object to convert
+     * @return            String object contains the same content as parameter
+     */
 	private String convertIStreamToString(InputStream istream)
 	{
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(istream));
@@ -630,6 +832,12 @@ public class VootaApi implements Serializable {
 	    return strBuilder.toString();
 	}
 	
+    /**
+     * Encode image file name in strImageUrl to used character set. 
+     *
+     * @param  strImageUrl image url to encode
+     * @return             encoded url
+     */
 	static private String getEncodedImageUrl(String strImageUrl)
 	{  
 	    String strResult = strImageUrl;
@@ -639,7 +847,8 @@ public class VootaApi implements Serializable {
     	    if (nLastIndex != -1)
     	    {
         	    strResult = strImageUrl.substring(0, nLastIndex + 1); 
-        	    strResult += URLEncoder.encode(strImageUrl.substring(nLastIndex + 1), CHARSET);
+        	    strResult += URLEncoder.encode(strImageUrl.substring(nLastIndex + 1), 
+        	            CHARSET);
     	    }
 	    }
 	    catch (UnsupportedEncodingException e)

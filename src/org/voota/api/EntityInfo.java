@@ -19,10 +19,6 @@
 package org.voota.api;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,14 +98,7 @@ public class EntityInfo implements Serializable
         m_nRecNegativeVotes = jsonEntity.getInt(JSON_PARAM_REC_NEG_VOTES);
         m_strDescription = jsonEntity.getString(JSON_PARAM_DESCRIPTION);
         
-        try
-        {
-            m_bImageSmall = VootaApi.getUrlImageBytes(m_strImageS);
-        }
-        catch (VootaApiException e)
-        {
-            
-        }
+        m_bImageSmall = VootaApi.getUrlImageBytes(m_strImageS);
     }
     
     /**
@@ -171,9 +160,9 @@ public class EntityInfo implements Serializable
     }
     
     /**
-     * Returns String object represents black-write image url to download. It returns String
-     * object because url could contain some special characters which would converted
-     * in used charset in future calls.  
+     * Returns String object represents black-write image url to download. It returns 
+     * String object because url could contain some special characters which would 
+     * converted in used charset in future calls.  
      *
      * @return black-white image url in String object
      * @see    <a href="http://trac.voota.org/wiki/entity_element">Entity element</a>
